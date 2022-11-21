@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'Movies/MovieDetailModel.dart';
-import 'WatchTrailer.dart';
+
+
 class MovieDetail extends StatefulWidget {
   final Movies? movie;
   const MovieDetail({Key? key, required this.movie}) : super(key: key);
@@ -16,7 +17,9 @@ class _MovieDetailState extends State<MovieDetail> {
     String result = splice.substring(0,4);
       return Scaffold(
         appBar: AppBar(
-          title: Text("${widget.movie?.title} (${result})",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+          title: Text((widget.movie?.release_date != null) ?
+            "${widget.movie?.title} (${result})"
+            :"${widget.movie?.title}",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
           centerTitle: true,
           automaticallyImplyLeading: true,
           backgroundColor: Colors.black,
@@ -37,7 +40,6 @@ class _MovieDetailState extends State<MovieDetail> {
             child: ListView(
               children : [
                 Container(
-
                 child :
                   Center(
                   child: Column(
@@ -57,7 +59,7 @@ class _MovieDetailState extends State<MovieDetail> {
                             fit: BoxFit.fill,
                               child: Image.network("${widget.movie?.cover_url}"))),
                       Padding(padding: const EdgeInsets.only(top:15.0)),
-                      Text((widget.movie?.directed_by != null) ? "Directed By : ${widget.movie?.directed_by}" : "TBA",
+                      Text((widget.movie?.directed_by != null) ? "Directed By : ${widget.movie?.directed_by}" : "Directed By : TBA",
                         style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 23),textAlign: TextAlign.center,),
                       Padding(padding: const EdgeInsets.only(top:8.0)),
                       Text(
@@ -65,38 +67,6 @@ class _MovieDetailState extends State<MovieDetail> {
                         style: TextStyle(color: Colors.white), textAlign: TextAlign.justify,
                       ),
                       Padding(padding: const EdgeInsets.only(top:20.0)),
-                      Builder(
-                        builder: (context) => ElevatedButton(
-                            onPressed: () {
-                              Navigator.push(context,
-                                  MaterialPageRoute(
-                                      builder: (context) => WatchTrailer()));
-                            },
-                            child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text('Watch Trailer'),
-                                  SizedBox(width: 10),
-                                  Icon(Icons.arrow_forward_ios)
-                                ]
-                            ),
-                            style: ElevatedButton.styleFrom(
-                              primary: Colors.white12,
-                              padding: EdgeInsets.all(10.0),
-                              fixedSize: Size(250,50),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12), // <-- Radius
-                              ),
-                              side: BorderSide(color: Colors.white12, width: 2),
-                              textStyle : TextStyle(fontSize: 23),
-                              elevation: 15,
-                            )
-
-                        ),
-                      ),
-
-
                     ],
                   ),
                 ),

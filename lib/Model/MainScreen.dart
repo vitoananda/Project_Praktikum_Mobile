@@ -80,7 +80,9 @@ class MainScreen extends StatelessWidget {
             child : Card(
               color: Colors.black26,
               child: ListTile(
-                title: Text("${data.movies?[index].title} (${result})",
+                title: Text((data.movies?[index].release_date != null) ?
+                "${data.movies?[index].title} (${result})"
+                  : "${data.movies?[index].title}",
                   style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),),
                 subtitle: Text((data.movies?[index].duration != 0) ?
                 "Duration : ${data.movies?[index].duration} Minutes"
