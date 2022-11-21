@@ -33,6 +33,7 @@ class Movies {
   String? cover_url;
   String? overview;
   String? directed_by;
+  String? release_date;
 
   Movies({
     this.id,
@@ -42,6 +43,7 @@ class Movies {
     this.cover_url,
     this.overview,
     this.directed_by,
+    this.release_date
   });
 
   Movies.fromJson(Map<String, dynamic> json){
@@ -52,6 +54,7 @@ class Movies {
     cover_url = json['cover_url'];
     overview = json['overview'];
     directed_by = json['directed_by'];
+    release_date = json['release_date'];
 
   }
 
@@ -63,7 +66,8 @@ class Movies {
     data['duration'] = this.duration;
     data['cover_url'] = this.cover_url;
     data['overview'] = this.overview;
-    data['directed_by'] - this.directed_by;
+    data['directed_by'] = this.directed_by;
+    data['release_date'] = this.release_date;
     return data;
   }
 }

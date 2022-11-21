@@ -1,190 +1,105 @@
-// ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors_in_immutables, unnecessary_null_comparison, prefer_const_constructors, missing_return, avoid_unnecessary_containers, avoid_print
-//
-// import 'dart:convert';
-//
-// import 'package:flutter/material.dart';
-// import 'package:http/http.dart' as http;
-// import 'package:projek_praktikum/helper/data_source.dart';
-// import 'Movies/MovieDetailModel.dart';
-//
-//
-// void main() {
-//   runApp(MyApp());
-// }
-//
-// class MyApp extends StatelessWidget {
-//   const MyApp({Key? key}) : super(key: key);
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       home : Scaffold(
-//         appBar: AppBar(
-//           title: Text("Marvel Movies"),
-//         ),
-//         body: Container(
-//           padding:  EdgeInsets.all(8),
-//           child: FutureBuilder(
-//             future: MovieDataSource.instance.loadMovies(),
-//             builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot){
-//               if(snapshot.hasError){
-//                 return _buildErrorSection();
-//               }
-//               if(snapshot.hasData){
-//                 return _buildSuccessSection(snapshot.data);
-//               }
-//               return _buildLoadingSection();
-//             },
-//           ),
-//         ),
-//       )
-//     );
-//   }
-//   Widget _buildErrorSection(){
-//     return Text("Error");
-//   }
-//   Widget _buildLoadingSection(){
-//     return Center(
-//       child: CircularProgressIndicator(),
-//     );
-//   }
-//
-//   Widget _buildSuccessSection(MovieDetailModel data){
-//     return ListView.builder(
-//       itemCount: data.data?.length,
-//         itemBuilder: (BuildContext context, int index){
-//           return _buildMovieList("${data.Data?[index].title}");
-//         }
-//     );
-//   }
-//   Widget _buildMovieList(MovieDetailModel Data){
-//     return InkWell(
-//       onTap: (){},
-//           child: Card(
-//             child: Row(
-//               children: [
-//                 Container(
-//                   width: 100,
-//                   height: 200,
-//                   child: Text("test"),
-//                 ),
-//                 SizedBox(
-//                   width: 20,
-//                 ),
-//                 Text("s")
-//               ],
-//             ),
-//
-//     ),
-//     );
-//   }
-// }
-
-import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:projek_praktikum/helper/base_network.dart';
-import 'package:projek_praktikum/Model/Movies/MovieDetailModel.dart';
-import 'movie_detail.dart';
-
+import 'MainScreen.dart';
 
 
 void main() => runApp(const MyApp());
 
-class MyApp extends StatelessWidget {
+
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  String firstDropdownValue = 'Movies';
+  String secondDropdownValue = 'Tv Shows';
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
-        home : Scaffold(
+        home: Scaffold(
           appBar: AppBar(
-            title: Text("Marvel Cinematic Universe Movies"),
+            title: Text("Marvel Cinematic Universe"),
             centerTitle: true,
             automaticallyImplyLeading: true,
             backgroundColor: Colors.black,
           ),
           body: Container(
-            color: Colors.black87,
+            decoration: BoxDecoration(
+                image: DecorationImage(
+                image: AssetImage('assets/marvel.png'),
+                fit: BoxFit.cover,
+              ),
+            ),
+            padding: EdgeInsets.all(8),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  DropdownButton<String>(
+                    dropdownColor: Colors.black26,
+                    value: firstDropdownValue,
+                    icon: const Icon(Icons.keyboard_arrow_down),
+                    style: const TextStyle(color: Colors.white,fontSize: 23),
+                    underline: Container(
+                      decoration: BoxDecoration(
+                          color: Colors.green, borderRadius: BorderRadius.circular(10)),
 
-            padding:  EdgeInsets.all(8),
-            child: FutureBuilder(
-              future: BaseNetwork.get("movies"),
-              builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot){
-                if(snapshot.hasError){
-                  return _buildErrorSection();
-                }
-                if(snapshot.hasData){
-                  MoviesModel moviesModel = MoviesModel.fromJson(snapshot.data);
-                  return _buildSuccessSection(moviesModel);
-                }
-                return _buildLoadingSection();
-              },
+                    ),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        firstDropdownValue = newValue!;
+
+                      });
+                    },
+                    items: <String>['Movies', 'Tv Shows']
+                        .map<DropdownMenuItem<String>>((String doaValue) {
+                      return DropdownMenuItem<String>(
+                        value: doaValue,
+                        child: Text(doaValue),
+                      );
+                    }).toList(),
+                  ),
+                  Padding(padding: EdgeInsets.only(top: 5)),
+                  Builder(
+                    builder: (context) => ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(
+                                  builder: (context) => MainScreen()));
+                        },
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text('Continue'),
+                              SizedBox(width: 10),
+                              Icon(Icons.arrow_forward_ios)
+                            ]
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.white12,
+                          padding: EdgeInsets.all(10.0),
+                          fixedSize: Size(180,50),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12), // <-- Radius
+                          ),
+                          side: BorderSide(color: Colors.white12, width: 2),
+                          textStyle : TextStyle(fontSize: 23),
+                          elevation: 15,
+                        )
+                    ),
+                  ),
+                  Padding(padding: EdgeInsets.only(top: 25)),
+                ],
+              ),
             ),
           ),
         )
     );
   }
-  Widget _buildErrorSection(){
-    return Text("Error");
-  }
-  Widget _buildLoadingSection(){
-    return Center(
-      child: CircularProgressIndicator(),
-    );
-  }
-
-  Widget _buildSuccessSection(MoviesModel data){
-    return ListView.builder(
-        itemCount: data.movies?.length,
-        itemBuilder: (BuildContext context, int index){
-          final Movies? movies = data.movies?[index];
-          return InkWell(
-              onTap: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context) => MovieDetail(movie: movies)));
-              },
-              child : Card(
-                color: Colors.black26,
-
-                  child: ListTile(
-                      title: Text("${data.movies?[index].title}",style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),),
-                      subtitle: Text("Duration : ${data.movies?[index].duration} Minutes",style: TextStyle(color: Colors.white)),
-                      leading: Image.network("${data.movies?[index].cover_url}") ,
-
-              ),
-              ),
-              );
-            }
-          );
-        }
-  }
-
-// Widget _buildMovieList(Movies Data){
-//   return InkWell(
-//     onTap: (){},
-//     child: Card(
-//       child: Row(
-//         children: [
-//           Container(
-//             width: 100,
-//             height: 200,
-//             child: Text("test"),
-//           ),
-//           SizedBox(
-//             width: 20,
-//           ),
-//           Text("s")
-//         ],
-//       ),
-//
-//     ),
-//   );
-// }
-
-
-
+}
