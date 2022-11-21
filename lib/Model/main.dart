@@ -83,20 +83,13 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:projek_praktikum/helper/base_network.dart';
 import 'package:projek_praktikum/Model/Movies/MovieDetailModel.dart';
-import 'MovieDetail.dart';
-
-
-class MoviesDataSource{
-  static MoviesDataSource instance = MoviesDataSource();
-  Future<Map<String, dynamic>> loadMovies(){
-    return BaseNetwork.get("movies");
-  }
-}
+import 'movie_detail.dart';
 
 
 
@@ -108,14 +101,20 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        debugShowCheckedModeBanner: false,
         home : Scaffold(
           appBar: AppBar(
             title: Text("Marvel Cinematic Universe Movies"),
+            centerTitle: true,
+            automaticallyImplyLeading: true,
+            backgroundColor: Colors.black,
           ),
           body: Container(
+            color: Colors.black87,
+
             padding:  EdgeInsets.all(8),
             child: FutureBuilder(
-              future: MoviesDataSource.instance.loadMovies(),
+              future: BaseNetwork.get("movies"),
               builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot){
                 if(snapshot.hasError){
                   return _buildErrorSection();
@@ -144,14 +143,18 @@ class MyApp extends StatelessWidget {
     return ListView.builder(
         itemCount: data.movies?.length,
         itemBuilder: (BuildContext context, int index){
+          final Movies? movies = data.movies?[index];
           return InkWell(
               onTap: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context) => MovieDetail()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => MovieDetail(movie: movies)));
               },
               child : Card(
+                color: Colors.black26,
+
                   child: ListTile(
-                      title: Text("${data.movies?[index].title}",style: TextStyle(fontWeight: FontWeight.bold),),
-                      subtitle: Text("Duration : ${data.movies?[index].duration} Minutes"),
+                      title: Text("${data.movies?[index].title}",style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),),
+                      subtitle: Text("Duration : ${data.movies?[index].duration} Minutes",style: TextStyle(color: Colors.white)),
+                      leading: Image.network("${data.movies?[index].cover_url}") ,
 
               ),
               ),

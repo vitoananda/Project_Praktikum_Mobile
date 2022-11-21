@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+
 class MoviesModel {
   List<Movies>? movies;
 
@@ -28,12 +30,18 @@ class Movies {
   String? title;
   String? release;
   int? duration;
+  String? cover_url;
+  String? overview;
+  String? directed_by;
 
   Movies({
     this.id,
     this.title,
     this.release,
     this.duration,
+    this.cover_url,
+    this.overview,
+    this.directed_by,
   });
 
   Movies.fromJson(Map<String, dynamic> json){
@@ -41,6 +49,10 @@ class Movies {
     title = json['title'];
     release = json['release_date'];
     duration = json['duration'];
+    cover_url = json['cover_url'];
+    overview = json['overview'];
+    directed_by = json['directed_by'];
+
   }
 
   Map<String, dynamic> toJson(){
@@ -49,6 +61,9 @@ class Movies {
     data['title'] = this.title;
     data['release'] = this.release;
     data['duration'] = this.duration;
+    data['cover_url'] = this.cover_url;
+    data['overview'] = this.overview;
+    data['directed_by'] - this.directed_by;
     return data;
   }
 }
