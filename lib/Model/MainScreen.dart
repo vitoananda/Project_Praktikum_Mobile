@@ -11,16 +11,23 @@ import 'package:projek_praktikum/Model/Movies/MovieDetailModel.dart';
 import 'MovieDetail.dart';
 
 
-class MainScreen extends StatelessWidget {
-  const MainScreen({Key? key}) : super(key: key);
+class MainScreen extends StatefulWidget {
+  final String value;
 
+  const MainScreen({Key? key, required this.value}) : super(key: key);
+
+  @override
+  State<MainScreen> createState() => _MainScreenState();
+}
+
+class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
-        home : Scaffold(
+        home: Scaffold(
           appBar: AppBar(
-            title: Text("Marvel Cinematic Universe"),
+            title: Text("Marvel Cinematic Universe (${widget.value})"),
             centerTitle: true,
             automaticallyImplyLeading: true,
             backgroundColor: Colors.black,
@@ -36,14 +43,14 @@ class MainScreen extends StatelessWidget {
           ),
           body: Container(
             color: Colors.black87,
-            padding:  EdgeInsets.all(8),
+            padding: EdgeInsets.all(8),
             child: FutureBuilder(
-              future: BaseNetwork.get("movies"),
-              builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot){
-                if(snapshot.hasError){
+              future: BaseNetwork.get("${widget.value}"),
+              builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                if (snapshot.hasError) {
                   return _buildErrorSection();
                 }
-                if(snapshot.hasData){
+                if (snapshot.hasData) {
                   MoviesModel moviesModel = MoviesModel.fromJson(snapshot.data);
                   return _buildSuccessSection(moviesModel);
                 }
@@ -54,42 +61,46 @@ class MainScreen extends StatelessWidget {
         )
     );
   }
-  Widget _buildErrorSection(){
+
+  Widget _buildErrorSection() {
     return Text("Error");
   }
-  Widget _buildLoadingSection(){
+
+  Widget _buildLoadingSection() {
     return Center(
       child: CircularProgressIndicator(),
     );
   }
 
-  Widget _buildSuccessSection(MoviesModel data){
-
+  Widget _buildSuccessSection(MoviesModel data) {
     return ListView.builder(
         itemCount: data.movies?.length,
-        itemBuilder: (BuildContext context, int index){
-
-
+        itemBuilder: (BuildContext context, int index) {
           final Movies? movies = data.movies?[index];
           String splice = "${data.movies?[index].release_date}";
-          String result = splice.substring(0,4);
+          String result = splice.substring(0, 4);
           return InkWell(
-            onTap: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context) => MovieDetail(movie: movies)));
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(
+                  builder: (context) => MovieDetail(movie: movies)));
             },
-            child : Card(
+            child: Card(
               color: Colors.black26,
               child: ListTile(
                 title: Text((data.movies?[index].release_date != null) ?
                 "${data.movies?[index].title} (${result})"
-                  : "${data.movies?[index].title}",
-                  style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),),
-                subtitle: Text((data.movies?[index].duration != 0) ?
-                "Duration : ${data.movies?[index].duration} Minutes"
-                    : "Duration : TBA",
+                    : "${data.movies?[index].title}",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold, color: Colors.white),),
+                subtitle: Text((data.movies?[index].duration != null )
+                    ? (data.movies?[index].duration != 0)
+                    ? "Duration : ${data.movies?[index].duration} Minutes"
+                    : "Duration : TBA"
+                    : (data.movies?[index].number_episodes != 0)
+                    ? "Episode Count : ${data.movies?[index].number_episodes}"
+                    : "Episode Count : TBA",
                     style: TextStyle(color: Colors.white)),
-                leading: Image.network("${data.movies?[index].cover_url}") ,
-
+                leading: Image.network("${data.movies?[index].cover_url}"),
               ),
             ),
           );

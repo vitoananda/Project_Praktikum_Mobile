@@ -11,6 +11,7 @@ class MovieDetail extends StatefulWidget {
 }
 
 class _MovieDetailState extends State<MovieDetail> {
+  bool isFavorite = false;
   @override
   Widget build(BuildContext context){
     String splice = "${widget.movie?.release_date}";
@@ -32,9 +33,22 @@ class _MovieDetailState extends State<MovieDetail> {
               color: Colors.white,
             ),
           ),
+          actions: [
+            IconButton(
+              onPressed: () {
+                setState(() {
+                  isFavorite = !isFavorite;
+                });
+              },
+              icon: (isFavorite)
+                  ? Icon(Icons.star)
+                  : Icon(Icons.star_outline),
+            ),
+
+          ],
         ),
         body: Container(
-          color: Colors.black,
+          color: Colors.black87,
           child: Padding(
             padding: const EdgeInsets.all(20.0),
             child: ListView(
@@ -59,7 +73,9 @@ class _MovieDetailState extends State<MovieDetail> {
                             fit: BoxFit.fill,
                               child: Image.network("${widget.movie?.cover_url}"))),
                       Padding(padding: const EdgeInsets.only(top:15.0)),
-                      Text((widget.movie?.directed_by != null) ? "Directed By : ${widget.movie?.directed_by}" : "Directed By : TBA",
+                      Text((widget.movie?.directed_by != null)
+                          ? "Directed By : ${widget.movie?.directed_by}"
+                          : "Directed By : TBA",
                         style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 23),textAlign: TextAlign.center,),
                       Padding(padding: const EdgeInsets.only(top:8.0)),
                       Text(

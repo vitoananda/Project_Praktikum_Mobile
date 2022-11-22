@@ -14,8 +14,8 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String firstDropdownValue = 'Movies';
-  String secondDropdownValue = 'Tv Shows';
+  String firstDropdownValue = 'movies';
+  String secondDropdownValue = 'tvshows';
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -40,37 +40,39 @@ class _MyAppState extends State<MyApp> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  DropdownButton<String>(
-                    dropdownColor: Colors.black26,
-                    value: firstDropdownValue,
-                    icon: const Icon(Icons.keyboard_arrow_down),
-                    style: const TextStyle(color: Colors.white,fontSize: 23),
-                    underline: Container(
-                      decoration: BoxDecoration(
-                          color: Colors.green, borderRadius: BorderRadius.circular(10)),
-
+                  Container(
+                    width: 170,
+                    child: DropdownButton<String>(
+                      dropdownColor: Colors.black26,
+                      value: firstDropdownValue,
+                      icon: const Icon(Icons.keyboard_arrow_down),
+                      style: const TextStyle(color: Colors.white,fontSize: 23),
+                      isExpanded : true,
+                      underline: Container(
+                        height: 1,
+                        color: Colors.white12.withOpacity(0.5),
+                      ),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          firstDropdownValue = newValue!;
+                        });
+                      },
+                      items: <String>['movies', 'tvshows']
+                          .map<DropdownMenuItem<String>>((String doaValue) {
+                        return DropdownMenuItem<String>(
+                          value: doaValue,
+                          child: Text(doaValue),
+                        );
+                      }).toList(),
                     ),
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        firstDropdownValue = newValue!;
-
-                      });
-                    },
-                    items: <String>['Movies', 'Tv Shows']
-                        .map<DropdownMenuItem<String>>((String doaValue) {
-                      return DropdownMenuItem<String>(
-                        value: doaValue,
-                        child: Text(doaValue),
-                      );
-                    }).toList(),
                   ),
-                  Padding(padding: EdgeInsets.only(top: 5)),
+                  Padding(padding: EdgeInsets.only(top: 9)),
                   Builder(
                     builder: (context) => ElevatedButton(
                         onPressed: () {
                           Navigator.push(context,
                               MaterialPageRoute(
-                                  builder: (context) => MainScreen()));
+                                  builder: (context) => MainScreen(value: firstDropdownValue )));
                         },
                         child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
